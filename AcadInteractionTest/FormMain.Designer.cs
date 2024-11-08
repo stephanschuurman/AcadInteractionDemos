@@ -39,6 +39,7 @@
             listBox1 = new ListBox();
             groupBox2 = new GroupBox();
             buttonLaunch = new Button();
+            buttonProc = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -151,7 +152,7 @@
             groupBox2.Controls.Add(buttonLaunch);
             groupBox2.Location = new Point(668, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(298, 235);
+            groupBox2.Size = new Size(298, 101);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "AutoCAD Drawing Launcher";
@@ -166,11 +167,22 @@
             buttonLaunch.UseVisualStyleBackColor = true;
             buttonLaunch.Click += buttonLaunch_Click;
             // 
+            // buttonProc
+            // 
+            buttonProc.Location = new Point(701, 218);
+            buttonProc.Name = "buttonProc";
+            buttonProc.Size = new Size(112, 34);
+            buttonProc.TabIndex = 3;
+            buttonProc.Text = "Processes";
+            buttonProc.UseVisualStyleBackColor = true;
+            buttonProc.Click += buttonProc_Click;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(978, 544);
+            Controls.Add(buttonProc);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             MinimumSize = new Size(1000, 600);
@@ -195,5 +207,6 @@
         private Button buttonOpen;
         private Button buttonLaunch;
         private Button buttonClear;
+        private Button buttonProc;
     }
 }

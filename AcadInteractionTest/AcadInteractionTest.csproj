@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoCAD.NET.Interop" Version="2025.25.0.58" />
     <PackageReference Include="Specshell.NDde" Version="4.0.0" />
   </ItemGroup>
 
