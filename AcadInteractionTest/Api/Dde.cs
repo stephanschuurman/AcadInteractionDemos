@@ -8,16 +8,16 @@ namespace AcadInteractionTest.Api
     {
         public void Test(string[] list)
         {
-            var service = GetDDS(".dwg");
+            var service = GetDDS(".dwg"); // AutoCAD.R25.DDE
 
             if (service == null || service.GetType() != typeof(string))
                 return;
 
-            using (DdeClient client = new DdeClient((string)service, "System")) // AutoCAD.R25.DDE // AutoCAD.Application
+            using (DdeClient client = new DdeClient((string)service, "System")) 
             {
                 try
                 {
-                    // Verbind met de DDE-server
+                    // Connect to DDE-server
                     client.Connect();
 
                     foreach (string line in list)
@@ -25,35 +25,13 @@ namespace AcadInteractionTest.Api
                         Debug.WriteLine($"Exec: {line}");
                         client.Execute(line, 1000);
                     }
-
-
-
-                    // + Environment.NewLine
-
-                    ////[open("%1")]
-                    //var path = "T:\\INNO\\2-Projects General\\770002 - Project Zero\\8-Engineering\\WP5 Electrical & Instrumentation\\1. Documents\\HG-87000\\HG-87000-001-E-S-001\\HG-87000-001-E-S-001 Rev A1.dwg";
-                    //client.Execute($"[open(\"{path}\")]");
-
-                    //// "C:\Program Files\Common Files\Autodesk Shared\AcShellEx\AcLauncher.exe" /O "%1"
-                    //// "C:\Program Files\Common Files\Autodesk Shared\AcShellEx\AcLauncher.exe" /O "T:\INNO\2-Projects General\770002 - Project Zero\8-Engineering\WP5 Electrical & Instrumentation\1. Documents\HG-87000\HG-87000-001-E-S-001\HG-87000-001-E-S-001 Rev A1.dwg"
-                    ////// Stuur een commando naar AutoCAD
-                    ////string command = "(command \"_.LINE\" \"0,0\" \"10000,10000\" \"\")";
-                    ////byte[] commandBytes = Encoding.ASCII.GetBytes(command);
-                    ////client.Poke("Execute", commandBytes.ToString(), commandBytes.Length);
-
-
-                    //
-
-
-
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Fout bij het verzenden van het commando: " + ex.Message);
+                    Debug.WriteLine("Error when executing: " + ex.Message);
                 }
                 finally
                 {
-                    // Verbreek de verbinding
                     client.Disconnect();
                 }
             }

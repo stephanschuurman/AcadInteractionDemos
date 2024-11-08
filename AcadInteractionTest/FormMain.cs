@@ -1,3 +1,4 @@
+using AcadInteractionTest.Api;
 using System.Diagnostics;
 using System.IO;
 
@@ -33,7 +34,17 @@ namespace AcadInteractionTest
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedItem != null)
+            {
                 listBox1.Items.Remove(listBox1.SelectedItem);
+
+                if (listBox1.Items.Count > 0)
+                    listBox1.SelectedIndex = 0;
+            }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
         }
 
         private void buttonExecDde_Click(object sender, EventArgs e)
@@ -63,5 +74,25 @@ namespace AcadInteractionTest
                 listBox1.Items.Add($"[open(\"{filePath}\")]" + Environment.NewLine);
             }
         }
+
+        private void buttonLaunch_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "DWG files (*.dwg)|*.dwg";
+            openFileDialog.InitialDirectory = @"C:\Program Files\Autodesk\AutoCAD 2025\Sample\Database Connectivity";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    AcShellEx.OpenWithAcLauncher(openFileDialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
     }
 }
