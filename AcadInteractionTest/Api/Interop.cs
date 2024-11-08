@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Autodesk.AutoCAD.Interop;
 using Autodesk.AutoCAD.Interop.Common;
 
@@ -7,7 +8,14 @@ namespace AcadInteractionTest.Api
 {
     internal class Interop
     {
-        static void InteropTest()
+
+        [DllImport("oleaut32.dll")]
+        private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out object ppunk);
+
+        /// <summary>
+        /// Open an new window and draw a line
+        /// </summary>
+        public static void InteropTest()
         {
             // Create a new instance of AutoCAD
             AcadApplication acadApp = new AcadApplication();
@@ -41,7 +49,57 @@ namespace AcadInteractionTest.Api
 
             Debug.WriteLine("Line created successfully!");
         }
+
+        public static void OpenWindow()
+        {
+            // AutoCAD's CLSID from HKEY_CLASSES_ROOT\AutoCAD.Application\CLSID
+            Guid clsid = new Guid("363E5B47-885D-44C3-89EB-A2AB2129B57E");
+            object acadAppObj;
+            int hr = GetActiveObject(ref clsid, IntPtr.Zero, out acadAppObj);
+
+            if (hr == 0) // S_OK
+            {
+                dynamic acadApp = acadAppObj;
+
+                /// Play
+                acadApp.Visible = true;
+                AcadDocument acadDoc = acadApp.ActiveDocument;
+                acadDoc.Application.ZoomExtents();
+
+                Debug.WriteLine($"AutoCAD version: {acadApp.Version}");
+            }
+            else
+                Debug.WriteLine("AutoCAD is not running.");
+        }
     }
+
+//    [DllImport("oleaut32.dll")]
+//    private static extern int GetActiveObject(ref Guid rclsid, IntPtr reserved, [MarshalAs(UnmanagedType.Interface)] out object ppunk);
+
+//    public static void OpenWindow()
+//    {
+//        // AutoCAD's CLSID
+//        Guid clsid = new Guid("0D6D0D0D-0D0D-0D0D-0D0D-0D0D0D0D0D0D");
+//        object acadAppObj;
+//        int hr = GetActiveObject(ref clsid, IntPtr.Zero, out acadAppObj);
+
+//        if (hr == 0) // S_OK
+//        {
+//            dynamic acadApp = acadAppObj;
+//            Console.WriteLine("AutoCAD version: " + acadApp.Version);
+//        }
+//        else
+//        {
+//            Console.WriteLine("AutoCAD is not running.");
+//        }
+//        // Get the ROT
+//        object acadAppObj = Marshal.GetActiveObject("AutoCAD.Application");
+//        AcadApplication acadApp = (AcadApplication)acadAppObj;
+
+//        // Now you can use acadApp to interact with the open AutoCAD window
+//        Console.WriteLine("AutoCAD version: " + acadApp.Version);
+//    }
+//}
 }
 
 

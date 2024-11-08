@@ -40,6 +40,7 @@
             groupBox2 = new GroupBox();
             buttonLaunch = new Button();
             buttonProc = new Button();
+            buttonInterop = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -169,19 +170,30 @@
             // 
             // buttonProc
             // 
-            buttonProc.Location = new Point(701, 218);
+            buttonProc.Location = new Point(674, 133);
             buttonProc.Name = "buttonProc";
-            buttonProc.Size = new Size(112, 34);
+            buttonProc.Size = new Size(157, 34);
             buttonProc.TabIndex = 3;
-            buttonProc.Text = "Processes";
+            buttonProc.Text = "Get Processes";
             buttonProc.UseVisualStyleBackColor = true;
             buttonProc.Click += buttonProc_Click;
+            // 
+            // buttonInterop
+            // 
+            buttonInterop.Location = new Point(674, 173);
+            buttonInterop.Name = "buttonInterop";
+            buttonInterop.Size = new Size(157, 34);
+            buttonInterop.TabIndex = 4;
+            buttonInterop.Text = "Interop";
+            buttonInterop.UseVisualStyleBackColor = true;
+            buttonInterop.Click += buttonInterop_Click;
             // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(978, 544);
+            Controls.Add(buttonInterop);
             Controls.Add(buttonProc);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -208,5 +220,6 @@
         private Button buttonLaunch;
         private Button buttonClear;
         private Button buttonProc;
+        private Button buttonInterop;
     }
 }

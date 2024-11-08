@@ -99,5 +99,11 @@ namespace AcadInteractionTest
             var procList = Api.Proc.GetProcess();
             MessageBox.Show("Found the following PID's:" + Environment.NewLine + string.Join(", ", procList));
         }
+
+        private void buttonInterop_Click(object sender, EventArgs e)
+        {
+            //Interop.InteropTest();
+            Api.Interop.OpenWindow();
+        }
     }
 }
