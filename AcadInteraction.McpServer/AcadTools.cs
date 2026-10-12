@@ -3,7 +3,7 @@ using AcadInteraction.Core;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
-namespace AcadMcpServer
+namespace AcadInteraction.McpServer
 {
     /// <summary>
     /// MCP tools for AutoCAD. Failures are thrown as <see cref="McpException"/> so the client receives an error result.

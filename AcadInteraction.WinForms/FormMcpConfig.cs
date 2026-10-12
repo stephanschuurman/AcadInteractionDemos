@@ -6,7 +6,7 @@ using System.Windows.Forms;
 namespace AcadInteraction.WinForms
 {
     /// <summary>
-    /// Generates a .mcp.json for Visual Studio that registers AcadMcpServer.
+    /// Generates a .mcp.json for Visual Studio that registers AcadInteraction.McpServer.
     /// </summary>
     public class FormMcpConfig : Form
     {
@@ -27,7 +27,7 @@ namespace AcadInteraction.WinForms
             ClientSize = new Size(760, 530);
             StartPosition = FormStartPosition.CenterParent;
 
-            var label = new Label { Text = "AcadMcpServer.exe:", AutoSize = true, Location = new Point(10, 15) };
+            var label = new Label { Text = "AcadInteraction.McpServer.exe:", AutoSize = true, Location = new Point(10, 15) };
             textBoxExe.SetBounds(170, 12, 480, 30);
             textBoxExe.TextChanged += (_, _) => UpdateJson();
 
@@ -81,14 +81,14 @@ namespace AcadInteraction.WinForms
 
         private void Browse()
         {
-            using var dialog = new OpenFileDialog { Filter = "AcadMcpServer.exe|AcadMcpServer.exe|Executables (*.exe)|*.exe" };
+            using var dialog = new OpenFileDialog { Filter = "AcadInteraction.McpServer.exe|AcadInteraction.McpServer.exe|Executables (*.exe)|*.exe" };
             if (dialog.ShowDialog(this) == DialogResult.OK)
                 textBoxExe.Text = dialog.FileName;
         }
 
         private bool ConfirmExePath() =>
             File.Exists(textBoxExe.Text) ||
-            MessageBox.Show(this, "AcadMcpServer.exe not found at this path. Save anyway?", Text,
+            MessageBox.Show(this, "AcadInteraction.McpServer.exe not found at this path. Save anyway?", Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
 
         private void Save(string? initialDir, string fileName)
@@ -171,11 +171,11 @@ namespace AcadInteraction.WinForms
         private static string? FindServerExe()
         {
             string? solutionDir = FindSolutionDir();
-            string binDir = solutionDir == null ? string.Empty : Path.Combine(solutionDir, "AcadMcpServer", "bin");
+            string binDir = solutionDir == null ? string.Empty : Path.Combine(solutionDir, "AcadInteraction.McpServer", "bin");
             if (!Directory.Exists(binDir))
                 return null;
 
-            return Directory.EnumerateFiles(binDir, "AcadMcpServer.exe", SearchOption.AllDirectories)
+            return Directory.EnumerateFiles(binDir, "AcadInteraction.McpServer.exe", SearchOption.AllDirectories)
                 .OrderByDescending(File.GetLastWriteTimeUtc)
                 .FirstOrDefault();
         }

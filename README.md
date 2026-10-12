@@ -8,7 +8,7 @@ Requires the .NET 10 SDK and Windows.
 |---|---|
 | `AcadInteraction.Core` | Shared library with all AutoCAD interaction code. |
 | `AcadInteraction.WinForms` | WinForms demo app, including an AI assistant (Azure OpenAI). |
-| `AcadMcpServer` | MCP server (stdio) exposing AutoCAD tools to AI clients. |
+| `AcadInteraction.McpServer` | MCP server (stdio) exposing AutoCAD tools to AI clients. |
 | `AcadInteraction.Core.Tests` | xUnit tests for the Core library. |
 
 ### Core features

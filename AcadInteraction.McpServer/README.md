@@ -1,4 +1,4 @@
-# AcadMcpServer
+# AcadInteraction.McpServer
 
 A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that exposes AutoCAD automation as tools for AI assistants such as GitHub Copilot (Visual Studio / VS Code) and Claude Desktop.
 
@@ -13,7 +13,7 @@ The server uses the **stdio** transport: the MCP client launches the executable 
 ## Build
 
 ```powershell
-dotnet build AcadMcpServer -c Release
+dotnet build AcadInteraction.McpServer -c Release
 ```
 
 ## Configure a client
@@ -23,7 +23,7 @@ dotnet build AcadMcpServer -c Release
 The server can print a ready-to-use config with the correct path to the executable:
 
 ```powershell
-.\AcadMcpServer\bin\Debug\net10.0\AcadMcpServer.exe --print-config > .mcp.json
+.\AcadInteraction.McpServer\bin\Debug\net10.0\AcadInteraction.McpServer.exe --print-config > .mcp.json
 ```
 
 The same config is also shown on stderr each time the server starts.
@@ -38,7 +38,7 @@ Create `.mcp.json` in the solution root:
 	"acad": {
 	  "type": "stdio",
 	  "command": "dotnet",
-	  "args": [ "run", "--project", "C:\\path\\to\\AcadMcpServer\\AcadMcpServer.csproj" ]
+	  "args": [ "run", "--project", "C:\\path\\to\\AcadInteraction.McpServer\\AcadInteraction.McpServer.csproj" ]
 	}
   }
 }
@@ -54,7 +54,7 @@ Add to `%APPDATA%\Claude\claude_desktop_config.json`:
 {
   "mcpServers": {
 	"acad": {
-	  "command": "C:\\path\\to\\AcadMcpServer\\bin\\Release\\net10.0\\AcadMcpServer.exe"
+	  "command": "C:\\path\\to\\AcadInteraction.McpServer\\bin\\Release\\net10.0\\AcadInteraction.McpServer.exe"
 	}
   }
 }
@@ -100,7 +100,7 @@ All drawing tools (`get_acad_info`, `draw_*`, `add_text`, `zoom_extents`, `send_
 - Starting the executable manually shows startup info on stderr and then waits for MCP messages on stdin; press `Ctrl+C` to stop.
 - To test interactively, use the MCP Inspector:
   ```powershell
-  npx @modelcontextprotocol/inspector dotnet run --project AcadMcpServer
+  npx @modelcontextprotocol/inspector dotnet run --project AcadInteraction.McpServer
   ```
 - If the client does not show the tools, check the client's output/log window for startup errors.
 - COM errors such as `MK_E_UNAVAILABLE` usually mean AutoCAD is not running or is busy (e.g. a modal dialog is open).
