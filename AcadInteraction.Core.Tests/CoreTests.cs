@@ -177,4 +177,73 @@ namespace AcadInteraction.Core.Tests
             Assert.All(Proc.GetProcess(), p => Assert.Equal("acad", p.Value, ignoreCase: true));
         }
     }
+
+	public class ScriptKeywordsTests
+	{
+		[Fact]
+		public void Expand_ReplacesAllKeywords()
+		{
+			var result = ScriptKeywords.Expand(
+				"<acet:cFolderName>|<acet:cBaseName>|<acet:cExtension>|<acet:cFileName>|<ACET:cFullFileName>",
+				@"C:\Work\Plan.dwg");
+			Assert.Equal(@"C:\Work|Plan|.dwg|Plan.dwg|C:\Work\Plan.dwg", result);
+		}
+
+		[Theory]
+		[InlineData("_.QSAVE", false)]
+		[InlineData("_.SAVEAS 2018 \"<acet:cBaseName>_new\"", true)]
+		public void ContainsKeywords(string script, bool expected)
+		{
+			Assert.Equal(expected, ScriptKeywords.ContainsKeywords(script));
+		}
+	}
+
+	public class ScpProjectTests
+	{
+		[Fact]
+		public void Parse_ReadsScriptTimeoutAndDrawings()
+		{
+			var lines = new[]
+			{
+				"[General_Start]",
+				"ScriptFile=C:\\Scripts\\fix.scr",
+				"StartUpScript=C:\\Scripts\\startup.scr",
+				"TimeOut=120",
+				"[General_End]",
+				"[DWGList_Start]",
+				"C:\\Work\\A.dwg,1",
+				"\"C:\\Work\\B.dxf\"",
+				"not a drawing",
+				"[DWGList_End]"
+			};
+
+			var result = ScpProject.Parse(lines);
+
+			Assert.Equal(@"C:\Scripts\fix.scr", result.ScriptFile);
+			Assert.Equal(120, result.TimeoutSeconds);
+			Assert.Equal(new[] { @"C:\Work\A.dwg", @"C:\Work\B.dxf" }, result.Drawings);
+		}
+	}
+
+    public class AutodeskProductsTests
+    {
+        [Theory]
+        [InlineData("AutoCAD 2025 - English", "Autodesk", true)]
+        [InlineData("Some tool", "Autodesk, Inc.", true)]
+        [InlineData("AutoCAD 2025", null, true)]
+        [InlineData("Autodesk Desktop App", null, true)]
+        [InlineData("Notepad++", "Notepad++ Team", false)]
+        [InlineData("AutoCAD plugin", "Other vendor", false)]
+        public void IsAutodesk(string name, string? publisher, bool expected)
+        {
+            Assert.Equal(expected, AutodeskProducts.IsAutodesk(name, publisher));
+        }
+
+        [Fact]
+        public void Registry_ReadsWithoutThrowing()
+        {
+            Assert.All(AutodeskProducts.GetInstalledProducts(), p => Assert.False(string.IsNullOrWhiteSpace(p.Name)));
+            Assert.All(AutodeskProducts.GetAcadReleases(), r => Assert.NotNull(r.AcadLocation));
+        }
+    }
 }
