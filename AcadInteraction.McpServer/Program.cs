@@ -20,9 +20,37 @@ var builder = Host.CreateApplicationBuilder(args);
 // stdout is reserved for the MCP protocol
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);
 
+// Every tool call is forwarded to the WinForms log console (named pipe) when it is open
+var logPipe = new AcadInteraction.Core.LogPipeClient();
+string pidTag = $"MCP {Environment.ProcessId}";
+logPipe.Send($"[{pidTag}] server started{(AcadInteraction.McpServer.AcadTools.ReadOnlyMode ? " (read-only)" : "")}");
+
 builder.Services.AddMcpServer()
     .WithStdioServerTransport()
-    .WithToolsFromAssembly();
+    .WithToolsFromAssembly()
+    .WithRequestFilters(filters => filters.AddCallToolFilter(next => async (request, cancellationToken) =>
+    {
+        string name = request.Params?.Name ?? "?";
+        string arguments = request.Params?.Arguments is { Count: > 0 } a
+            ? string.Join(", ", a.Select(kv => $"{kv.Key}={kv.Value.GetRawText()}"))
+            : "";
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        logPipe.Send($"[{pidTag}] -> {name}({arguments})");
+        try
+        {
+            var result = await next(request, cancellationToken);
+            string text = string.Join(" ", result.Content.OfType<ModelContextProtocol.Protocol.TextContentBlock>().Select(c => c.Text));
+            if (text.Length > 300)
+                text = text[..300] + "...";
+            logPipe.Send($"[{pidTag}] <- {name} {(result.IsError == true ? "ERROR" : "OK")} ({sw.ElapsedMilliseconds} ms): {text}");
+            return result;
+        }
+        catch (Exception ex)
+        {
+            logPipe.Send($"[{pidTag}] <- {name} ERROR ({sw.ElapsedMilliseconds} ms): {ex.Message}");
+            throw;
+        }
+    }));
 
 var app = builder.Build();
 
