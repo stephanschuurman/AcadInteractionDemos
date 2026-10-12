@@ -19,18 +19,7 @@ namespace AcadInteraction.WinForms
             /// Add text to textBoxInput
             textBoxInput.Text = "_.C .CIRCLE 50,50 40" + Environment.NewLine;
 
-            /// AI assistant button (created in code to keep the designer untouched)
-            var buttonAssistant = new Button
-            {
-                Text = "AI assistant",
-                AutoSize = true,
-                Anchor = AnchorStyles.Bottom | AnchorStyles.Right
-            };
-            buttonAssistant.Location = new Point(ClientSize.Width - 130, ClientSize.Height - 40);
-            buttonAssistant.Click += (_, _) => new FormAssistant().Show(this);
-            Controls.Add(buttonAssistant);
-            buttonAssistant.BringToFront();
-
+            /// MCP config button (created in code to keep the designer untouched)
             var buttonMcpConfig = new Button
             {
                 Text = "MCP config",

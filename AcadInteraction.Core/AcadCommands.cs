@@ -6,7 +6,7 @@ namespace AcadInteraction.Core
     }
 
     /// <summary>
-    /// Shared AutoCAD operations used by the MCP server and the AI assistant.
+    /// Shared AutoCAD operations used by the MCP server and the WinForms demo.
     /// Each call attaches to the running AutoCAD, retries while it is busy and releases COM references.
     /// </summary>
     public static class AcadCommands

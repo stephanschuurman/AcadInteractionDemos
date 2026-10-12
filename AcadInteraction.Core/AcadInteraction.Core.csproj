@@ -9,8 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoCAD.NET.Interop" Version="2025.25.0.58" />
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
-    <PackageReference Include="Azure.Identity" Version="1.21.0" />
     <PackageReference Include="Specshell.NDde" Version="4.0.0" />
   </ItemGroup>
 
