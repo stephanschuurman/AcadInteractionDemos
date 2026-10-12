@@ -51,6 +51,41 @@ namespace AcadInteraction.McpServer
                 : string.Join("\n", procs.Select(p => $"PID {p.Key}: {p.Value}"));
         });
 
+        // ---- Registry ----
+
+        [McpServerTool(Name = "get_file_version", ReadOnly = true),
+         Description("Returns version details (file/product version, company, description, .NET assembly version) of an .exe or .dll. A bare file name such as \"accoremgd.dll\" is looked up in the AutoCAD install folder.")]
+        public static string GetFileVersion(
+            [Description("Full path or file name, e.g. \"C:\\\\Program Files\\\\Autodesk\\\\AutoCAD 2025\\\\acdbmgd.dll\" or \"acdbmgd.dll\"")] string file,
+            [Description("Optional acad.exe PID whose install folder is searched")] int? pid = null) =>
+            Run(() => FileDetails.GetVersionInfo(FileDetails.ResolveAcadFile(file, pid)));
+
+        [McpServerTool(Name = "get_acad_exe_details", ReadOnly = true),
+         Description("Returns details of acad.exe: for running processes the path, version, start time, memory and window title; plus version details of every installed AutoCAD release.")]
+        public static string GetAcadExeDetails(
+            [Description("Optional PID to only show one running acad.exe process")] int? pid = null) =>
+            Run(() => FileDetails.GetAcadExeDetails(pid));
+
+        [McpServerTool(Name = "list_autodesk_products", ReadOnly = true),
+         Description("Lists installed Autodesk applications from the Windows registry (name, version, install location).")]
+        public static string ListAutodeskProducts() => Run(() =>
+        {
+            var products = AutodeskProducts.GetInstalledProducts();
+            return products.Count == 0
+                ? "No Autodesk applications found."
+                : string.Join("\n", products.Select(p => $"{p.Name} | {p.Version} | {p.InstallLocation}"));
+        });
+
+        [McpServerTool(Name = "list_acad_releases", ReadOnly = true),
+         Description("Lists installed AutoCAD releases and verticals (release, product key, name, location, current) from HKLM\\SOFTWARE\\Autodesk\\AutoCAD.")]
+        public static string ListAcadReleases() => Run(() =>
+        {
+            var releases = AutodeskProducts.GetAcadReleases();
+            return releases.Count == 0
+                ? "No AutoCAD releases found."
+                : string.Join("\n", releases.Select(r => $"{r.Release}\\{r.ProductKey} | {r.ProductName} | {r.AcadLocation}{(r.IsCurrent ? " | current" : "")}"));
+        });
+
         // ---- Interop (COM) ----
 
         private const string DocDesc = "Optional document name (e.g. \"Drawing1.dwg\") or full path; uses the active document when empty. See list_documents.";
